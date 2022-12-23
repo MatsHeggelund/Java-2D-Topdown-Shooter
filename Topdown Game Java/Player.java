@@ -82,8 +82,6 @@ public class Player {
         
     }
 
-
-
     public void getPlayerImage(){
         int tileSize = game.originalTileSize;
         try{

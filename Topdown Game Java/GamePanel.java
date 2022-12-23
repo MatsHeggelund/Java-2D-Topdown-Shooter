@@ -4,6 +4,9 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.util.Arrays;
+import java.awt.Point;
+import javax.swing.ImageIcon;
+import java.awt.Toolkit;
 
 import javax.swing.JPanel;
 
@@ -41,6 +44,11 @@ public class GamePanel extends JPanel implements Runnable{
                 }
             }
         }
+
+        //set new cursor to an invisible one
+        setCursor(Toolkit.getDefaultToolkit().createCustomCursor(
+        new ImageIcon("").getImage(),
+        new Point(0,0),"custom cursor"));
 
     }
 
