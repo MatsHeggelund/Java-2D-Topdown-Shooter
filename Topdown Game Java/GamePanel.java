@@ -21,7 +21,7 @@ public class GamePanel extends JPanel implements Runnable{
     final int FPS = 60;
 
     KeyHandler keyH = new KeyHandler();
-    Player player = new Player(this, 100, 100);
+    Player player = new Player(this, tileSize*3, tileSize*3);
     Tilemap tilemap = new Tilemap(this);
     Thread gameThread;
     Rectangle[] walls = {};
@@ -36,7 +36,7 @@ public class GamePanel extends JPanel implements Runnable{
 
         for(int row = 0; row < tilemap.map.length; row++){
             for(int col = 0; col < tilemap.map[0].length; col++){
-                if(tilemap.map[row][col] != 0){
+                if(tilemap.map[row][col] != 0 && tilemap.map[row][col] != 1 && tilemap.map[row][col] != 6){
                     walls = AppendArray(walls, new Rectangle(col*tileSize, row*tileSize, tileSize, tileSize));
                 }
             }
