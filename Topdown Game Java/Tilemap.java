@@ -37,7 +37,7 @@ public class Tilemap {
         this.height = game.tileSize;
 
         //Get the image for different tile types (type, xpos, ypos)
-        getTileImage(0, 2, 3);
+
         getTileImage(1, 1, 1);
         getTileImage(2, 0, 0);
         getTileImage(3, 4, 6);

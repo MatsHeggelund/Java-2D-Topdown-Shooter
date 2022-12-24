@@ -1,3 +1,4 @@
+import java.awt.Color;
 import javax.swing.JFrame;
 
 public class Main{
@@ -9,11 +10,14 @@ public class Main{
         window.setTitle("2D Java Game");
 
         GamePanel gamePanel = new GamePanel();
+        Color backgroundColor = new Color(66, 40, 53);
+        gamePanel.setBackground(backgroundColor);
 
         window.add(gamePanel);
         window.pack();
         window.setLocationRelativeTo(null);
         window.setVisible(true);
+
 
         gamePanel.startGameThread();
     }

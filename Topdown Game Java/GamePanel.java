@@ -99,13 +99,26 @@ public class GamePanel extends JPanel implements Runnable{
 
         Graphics2D g2 = (Graphics2D)g;
 
+        //draw tiles that are behind the player
         for(int row = 0; row < maxScreenRow; row++){
             for(int col = 0; col < maxScreenCol; col++){
-                tilemap.draw(g2, row, col, tilemap.map[row][col]);
+                if(tilemap.map[row][col] == 1){
+                    tilemap.draw(g2, row, col, tilemap.map[row][col]);
+                }
             }
         }
         player.draw(g2);
         weapon.draw(g2);
+        //draw tiles that are in front of the player
+        for(int row = 0; row < maxScreenRow; row++){
+            for(int col = 0; col < maxScreenCol; col++){
+                if(tilemap.map[row][col] != 1){
+                    tilemap.draw(g2, row, col, tilemap.map[row][col]);
+                }
+            }
+        }
+
+
         cursor.draw(g2);
 
         g2.dispose();
