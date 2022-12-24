@@ -25,6 +25,7 @@ public class GamePanel extends JPanel implements Runnable{
 
     KeyHandler keyH = new KeyHandler();
     Player player = new Player(this, tileSize*3, tileSize*3);
+    Weapon weapon = new Weapon(this);
     Tilemap tilemap = new Tilemap(this);
     Thread gameThread;
     Rectangle[] walls = {};
@@ -90,6 +91,7 @@ public class GamePanel extends JPanel implements Runnable{
     public void update(){
         player.update();
         cursor.update();
+        weapon.update();
     }
 
     public void paintComponent(Graphics g){
@@ -103,6 +105,7 @@ public class GamePanel extends JPanel implements Runnable{
             }
         }
         player.draw(g2);
+        weapon.draw(g2);
         cursor.draw(g2);
 
         g2.dispose();
