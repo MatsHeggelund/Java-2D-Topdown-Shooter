@@ -7,6 +7,8 @@ import java.util.Arrays;
 import java.awt.Point;
 import javax.swing.ImageIcon;
 import java.awt.Toolkit;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseAdapter;
 
 import javax.swing.JPanel;
 
@@ -24,12 +26,16 @@ public class GamePanel extends JPanel implements Runnable{
     final int FPS = 60;
 
     KeyHandler keyH = new KeyHandler();
-    Player player = new Player(this, tileSize*3, tileSize*3);
+    Player player = new Player(this, screenWidth/2, screenHeight/2);
     Weapon weapon = new Weapon(this);
     Tilemap tilemap = new Tilemap(this);
     Thread gameThread;
     Rectangle[] walls = {};
+    Projectile[] projectiles = {};
     Cursor cursor = new Cursor(this);
+
+    Boolean mouseClick = false;
+    int mouseTimer;
 
     public GamePanel(){
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -38,6 +44,7 @@ public class GamePanel extends JPanel implements Runnable{
         this.addKeyListener(keyH);
         this.setFocusable(true);
 
+        //Add collision for all wall tiles
         for(int row = 0; row < tilemap.map.length; row++){
             for(int col = 0; col < tilemap.map[0].length; col++){
                 if(tilemap.map[row][col] != 0 && tilemap.map[row][col] != 1 && tilemap.map[row][col] != 6){
@@ -51,12 +58,29 @@ public class GamePanel extends JPanel implements Runnable{
         new ImageIcon("").getImage(),
         new Point(0,0),"custom cursor"));
 
+        //check for mouse input. Toggle mouseClick variable (mouse button held down or not)
+        addMouseListener(new MouseAdapter(){
+            public void mousePressed(MouseEvent me){
+                mouseClick = true;
+            }
+            public void mouseReleased(MouseEvent me){
+                mouseClick = false;
+            }
+        });
     }
 
-    public Rectangle[] AppendArray(Rectangle[] walls, Rectangle wall){
-        walls = Arrays.copyOf(walls, walls.length + 1);
-        walls[walls.length-1] = wall;
-        return walls;
+    //Append rectangle to an array
+    public Rectangle[] AppendArray(Rectangle[] array, Rectangle element){
+        array = Arrays.copyOf(array, array.length + 1);
+        array[array.length-1] = element;
+        return array;
+    }
+
+    //Append projectile to projectile array
+    public Projectile[] AppendProjectile(Projectile[] array, Projectile element){
+        array = Arrays.copyOf(array, array.length + 1);
+        array[array.length-1] = element;
+        return array;
     }
 
     public void startGameThread(){
@@ -92,6 +116,28 @@ public class GamePanel extends JPanel implements Runnable{
         player.update();
         cursor.update();
         weapon.update();
+
+        mouseTimer++;
+        //Check if mouse button is being held
+        if(mouseClick){
+            //If projectile cooldown is finished, create a new projectile
+            if(mouseTimer > player.attackspeed){
+                projectiles = AppendProjectile(projectiles, new Projectile(this));
+                mouseTimer = 0;
+            }
+        }
+
+        for(int i = 0; i < projectiles.length; i++){
+            //if projectile isnt deleted
+            if(projectiles[i] != null){
+                //if projectile should be destroyed, set it to null (destroy it)
+                if(projectiles[i].destroy){
+                    projectiles[i] = null;
+                } else{
+                    projectiles[i].update();
+                }
+            }
+        }
     }
 
     public void paintComponent(Graphics g){
@@ -117,8 +163,13 @@ public class GamePanel extends JPanel implements Runnable{
                 }
             }
         }
-
-
+        //draw projectiles
+        for(int i = 0; i < projectiles.length; i++){
+            //If projectile isnt deleted, draw it.
+            if(projectiles[i] != null){
+                projectiles[i].draw(g2);
+            }
+        }
         cursor.draw(g2);
 
         g2.dispose();

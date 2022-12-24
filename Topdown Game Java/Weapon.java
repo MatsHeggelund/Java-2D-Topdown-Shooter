@@ -43,7 +43,7 @@ public class Weapon {
     }
 
     //Get rotated copy of weapon image based on angle
-    public static BufferedImage rotateImageByDegrees(BufferedImage img, double angle) {
+    public BufferedImage rotateImageByDegrees(BufferedImage img, double angle) {
         int w = img.getWidth();    
         int h = img.getHeight();
     

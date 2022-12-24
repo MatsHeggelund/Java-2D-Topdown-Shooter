@@ -6,16 +6,15 @@ import java.awt.image.BufferedImage;
 import java.awt.Rectangle;
 
 public class Player {
-    int x, y, width, height, speed, direction, flipImage;
+    int x, y, width, height, speed, attackspeed, direction, flipImage;
     GamePanel game;
     BufferedImage playerImage;
     Rectangle rect;
 
     Player(GamePanel gamePanel, int x, int y){
         this.game = gamePanel;
-        this.width = game.tileSize;
-        this.height = game.tileSize;
         this.speed = 6;
+        this.attackspeed = 15;
         //Sprite flipping variables based on mouse position
         this.direction = 1;
         this.flipImage = 0;
@@ -47,30 +46,30 @@ public class Player {
 
     public void move(int dx, int dy){
         if(dx!=0){
-            this.collisionDetection(dx, 0);
+            this.collisionDetection(this.rect, dx, 0);
         }
         if(dy!=0){
-            this.collisionDetection(0, dy);
+            this.collisionDetection(this.rect, 0, dy);
         }
     }
 
-    public void collisionDetection(int dx, int dy){
-        this.rect.x += dx;
-        this.rect.y += dy;
+    public void collisionDetection(Rectangle rectangle, int dx, int dy){
+        rectangle.x += dx;
+        rectangle.y += dy;
 
         for(int i = 0; i < game.walls.length; i++){
-            if(this.rect.intersects(game.walls[i])){
+            if(rectangle.intersects(game.walls[i])){
                 if(dx>0){
-                    this.rect.x = game.walls[i].x - this.width;
+                    rectangle.x = game.walls[i].x - rectangle.width;
                 }
                 if(dx<0){
-                    this.rect.x = game.walls[i].x + game.walls[i].width;
+                    rectangle.x = game.walls[i].x + game.walls[i].width;
                 }
                 if(dy>0){
-                    this.rect.y = game.walls[i].y - this.height;
+                    rectangle.y = game.walls[i].y - rectangle.height;
                 }
                 if(dy<0){
-                    this.rect.y = game.walls[i].y + game.walls[i].height;
+                    rectangle.y = game.walls[i].y + game.walls[i].height;
                 }
             }
         }
@@ -78,7 +77,7 @@ public class Player {
 
     public void draw(Graphics2D g2){
         //Draw the player based on position
-        g2.drawImage(playerImage, this.rect.x + this.flipImage*this.width, this.rect.y, this.width*this.direction, this.height, null);
+        g2.drawImage(playerImage, this.rect.x + this.flipImage*this.rect.width, this.rect.y, this.rect.width*this.direction, this.rect.height, null);
         
     }
 
