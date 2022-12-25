@@ -3,6 +3,7 @@ import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Tilemap {
     GamePanel game;
@@ -55,6 +56,16 @@ public class Tilemap {
 
     public void draw(Graphics2D g2, int row, int col, int index){
         g2.drawImage(tileImages[index], col*game.tileSize, row*game.tileSize, width, height, null);
+    }
+
+    public int[] getRandomFloorTile(){
+        int row = ThreadLocalRandom.current().nextInt(0, this.map.length);
+        int col = ThreadLocalRandom.current().nextInt(0, this.map[0].length);
+        if(this.map[row][col] == 0){
+            return new int[] {col*game.tileSize, row*game.tileSize};
+        } else{
+            return new int[] {0, 0};
+        }
     }
 
     public void getTileImage(int tileImage, int col, int row){

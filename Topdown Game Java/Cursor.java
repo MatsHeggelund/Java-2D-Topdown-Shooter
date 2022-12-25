@@ -26,15 +26,6 @@ public class Cursor {
         SwingUtilities.convertPointToScreen(pt, game);
         this.mx = MouseInfo.getPointerInfo().getLocation().x - pt.x;
         this.my = MouseInfo.getPointerInfo().getLocation().y - pt.y;
-
-        //Flip player sprite based on mouse position
-        if(this.mx < game.player.rect.x){
-            game.player.direction = -1;
-            game.player.flipImage = 1;
-        } else{
-            game.player.direction = 1;
-            game.player.flipImage = 0;
-        }
     }
 
     public void draw(Graphics2D g2){

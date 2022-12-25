@@ -42,6 +42,15 @@ public class Player {
         if(game.keyH.rightPressed == true){
             this.move(this.speed, 0);
         }
+
+        //Flip player sprite based on mouse position
+        if(game.cursor.mx < this.rect.x){
+            this.direction = -1;
+            this.flipImage = 1;
+        } else{
+            this.direction = 1;
+            this.flipImage = 0;
+        }
     }
 
     public void move(int dx, int dy){

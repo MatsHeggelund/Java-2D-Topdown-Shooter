@@ -32,10 +32,13 @@ public class GamePanel extends JPanel implements Runnable{
     Thread gameThread;
     Rectangle[] walls = {};
     Projectile[] projectiles = {};
+    Enemy[] enemies = {};
     Cursor cursor = new Cursor(this);
 
     Boolean mouseClick = false;
     int mouseTimer;
+    int enemySpawnTimer, maxEnemies;
+    int[] enemyPos;
 
     public GamePanel(){
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -83,6 +86,13 @@ public class GamePanel extends JPanel implements Runnable{
         return array;
     }
 
+    //Append enemy to enemy array
+    public Enemy[] AppendEnemy(Enemy[] array, Enemy element){
+        array = Arrays.copyOf(array, array.length + 1);
+        array[array.length-1] = element;
+        return array;
+    }
+
     public void startGameThread(){
         gameThread = new Thread(this);
         gameThread.start();
@@ -117,6 +127,7 @@ public class GamePanel extends JPanel implements Runnable{
         cursor.update();
         weapon.update();
 
+        //Projectile creation
         mouseTimer++;
         //Check if mouse button is being held
         if(mouseClick){
@@ -127,6 +138,26 @@ public class GamePanel extends JPanel implements Runnable{
             }
         }
 
+        //enemy creation
+        enemySpawnTimer++;
+        //If projectile cooldown is finished, create a new projectile
+        if(enemySpawnTimer > 30 && maxEnemies < 6){
+            //get position of enemy
+            enemyPos = tilemap.getRandomFloorTile();
+            //if enemy isnt inside of a wall
+            if(enemyPos[0] != 0 && enemyPos[1] != 0){
+                enemies = AppendEnemy(enemies, new Enemy(this, enemyPos[0], enemyPos[1]));
+                maxEnemies++;
+                enemySpawnTimer = 0;
+            }
+        }
+
+        //update enemies
+        for(int i = 0; i < enemies.length; i++){
+            enemies[i].update();
+        }
+
+        //update projectiles
         for(int i = 0; i < projectiles.length; i++){
             //if projectile isnt deleted
             if(projectiles[i] != null){
@@ -153,8 +184,11 @@ public class GamePanel extends JPanel implements Runnable{
                 }
             }
         }
+
+        //draw player, draw weapon
         player.draw(g2);
         weapon.draw(g2);
+
         //draw tiles that are in front of the player
         for(int row = 0; row < maxScreenRow; row++){
             for(int col = 0; col < maxScreenCol; col++){
@@ -163,6 +197,12 @@ public class GamePanel extends JPanel implements Runnable{
                 }
             }
         }
+
+        //draw enemies
+        for(int i = 0; i < enemies.length; i++){
+            enemies[i].draw(g2);
+        }
+
         //draw projectiles
         for(int i = 0; i < projectiles.length; i++){
             //If projectile isnt deleted, draw it.
@@ -170,6 +210,8 @@ public class GamePanel extends JPanel implements Runnable{
                 projectiles[i].draw(g2);
             }
         }
+
+        //draw cursor
         cursor.draw(g2);
 
         g2.dispose();
