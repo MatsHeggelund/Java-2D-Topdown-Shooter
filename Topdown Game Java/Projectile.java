@@ -87,9 +87,24 @@ public class Projectile {
     }
 
     public void projectileCollisionDetection(){
+        //If projectile collides with wall
         for(int i = 0; i < game.walls.length; i++){
             if(this.rect.intersects(game.walls[i])){
                 this.speed = 0;
+            }
+
+        }
+        //if projectile collides with enemy
+        for(int i = 0; i < game.enemies.length; i++){
+            if(game.enemies[i] != null){
+                if(this.rect.intersects(game.enemies[i].rect)){
+                    this.speed = 0;
+                    game.enemies[i].health--;
+                    if(game.enemies[i].health <= 0){
+                        game.enemies[i].destroy = true;
+                        game.numberOfEnemies--;
+                    }
+                }
             }
         }
     }

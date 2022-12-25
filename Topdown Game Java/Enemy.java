@@ -10,6 +10,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Enemy {
     GamePanel game;
     Rectangle rect;
+    Boolean destroy;
 
     BufferedImage enemyImage;
     String[] enemyImages = {
@@ -17,12 +18,14 @@ public class Enemy {
     };
 
     double angle;
-    int speed, dx, dy, spriteIndex, direction, flipImage;
+    int health, speed, dx, dy, spriteIndex, direction, flipImage;
     Enemy(GamePanel game, int x, int y){
         this.game = game;
         this.speed = 2;
         this.direction = 1;
         this.flipImage = 0;
+        this.destroy = false;
+        this.health = 3;
 
         this.rect = new Rectangle();
         this.rect.x = x;

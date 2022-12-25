@@ -37,7 +37,8 @@ public class GamePanel extends JPanel implements Runnable{
 
     Boolean mouseClick = false;
     int mouseTimer;
-    int enemySpawnTimer, maxEnemies;
+    int enemySpawnTimer, numberOfEnemies;
+    int maxEnemies = 7;
     int[] enemyPos;
 
     public GamePanel(){
@@ -139,22 +140,33 @@ public class GamePanel extends JPanel implements Runnable{
         }
 
         //enemy creation
-        enemySpawnTimer++;
-        //If projectile cooldown is finished, create a new projectile
-        if(enemySpawnTimer > 30 && maxEnemies < 6){
-            //get position of enemy
-            enemyPos = tilemap.getRandomFloorTile();
-            //if enemy isnt inside of a wall
-            if(enemyPos[0] != 0 && enemyPos[1] != 0){
-                enemies = AppendEnemy(enemies, new Enemy(this, enemyPos[0], enemyPos[1]));
-                maxEnemies++;
-                enemySpawnTimer = 0;
+        if(numberOfEnemies < maxEnemies){
+            enemySpawnTimer++;
+            //If projectile cooldown is finished, create a new projectile
+            if(enemySpawnTimer > 30){
+                //get position of enemy
+                enemyPos = tilemap.getRandomFloorTile();
+                //if enemy isnt inside of a wall
+                if(enemyPos[0] != 0 && enemyPos[1] != 0){
+                    enemies = AppendEnemy(enemies, new Enemy(this, enemyPos[0], enemyPos[1]));
+                    numberOfEnemies++;
+                    enemySpawnTimer = 0;
+                }
             }
         }
 
+
         //update enemies
         for(int i = 0; i < enemies.length; i++){
-            enemies[i].update();
+            //if projectile isnt deleted
+            if(enemies[i] != null){
+                //if projectile should be destroyed, set it to null (destroy it)
+                if(enemies[i].destroy){
+                    enemies[i] = null;
+                } else{
+                    enemies[i].update();
+                }
+            }
         }
 
         //update projectiles
@@ -200,7 +212,9 @@ public class GamePanel extends JPanel implements Runnable{
 
         //draw enemies
         for(int i = 0; i < enemies.length; i++){
-            enemies[i].draw(g2);
+            if(enemies[i] != null){
+                enemies[i].draw(g2);
+            }
         }
 
         //draw projectiles
