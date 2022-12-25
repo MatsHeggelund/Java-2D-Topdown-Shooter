@@ -148,19 +148,23 @@ public class GamePanel extends JPanel implements Runnable{
                 enemyPos = tilemap.getRandomFloorTile();
                 //if enemy isnt inside of a wall
                 if(enemyPos[0] != 0 && enemyPos[1] != 0){
-                    enemies = AppendEnemy(enemies, new Enemy(this, enemyPos[0], enemyPos[1]));
-                    numberOfEnemies++;
-                    enemySpawnTimer = 0;
+                    //get distance between player and potential enemy
+                    double distanceFromPlayer = Math.sqrt(Math.pow((enemyPos[0] - player.rect.x), 2) + Math.pow((enemyPos[1] - player.rect.y), 2));
+                    //if potential enemy isnt too close to the player, create it
+                    if(distanceFromPlayer > tileSize*3){
+                        enemies = AppendEnemy(enemies, new Enemy(this, enemyPos[0], enemyPos[1]));
+                        numberOfEnemies++;
+                        enemySpawnTimer = 0;
+                    }
                 }
             }
         }
 
-
         //update enemies
         for(int i = 0; i < enemies.length; i++){
-            //if projectile isnt deleted
+            //if enemy isnt deleted
             if(enemies[i] != null){
-                //if projectile should be destroyed, set it to null (destroy it)
+                //if enemy should be destroyed, set it to null (destroy it)
                 if(enemies[i].destroy){
                     enemies[i] = null;
                 } else{
@@ -183,6 +187,7 @@ public class GamePanel extends JPanel implements Runnable{
         }
     }
 
+    //draw function
     public void paintComponent(Graphics g){
         super.paintComponent(g);
 

@@ -100,6 +100,7 @@ public class Projectile {
                 if(this.rect.intersects(game.enemies[i].rect)){
                     this.speed = 0;
                     game.enemies[i].health--;
+                    game.enemies[i].hit = true;
                     if(game.enemies[i].health <= 0){
                         game.enemies[i].destroy = true;
                         game.numberOfEnemies--;
