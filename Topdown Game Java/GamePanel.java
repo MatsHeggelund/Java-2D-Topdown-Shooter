@@ -33,6 +33,7 @@ public class GamePanel extends JPanel implements Runnable{
     Rectangle[] walls = {};
     Projectile[] projectiles = {};
     Enemy[] enemies = {};
+    Coin[] coins = {};
     Cursor cursor = new Cursor(this);
 
     Boolean mouseClick = false;
@@ -92,6 +93,23 @@ public class GamePanel extends JPanel implements Runnable{
         array = Arrays.copyOf(array, array.length + 1);
         array[array.length-1] = element;
         return array;
+    }
+
+    //Append coin to coin array
+    public Coin[] AppendCoins(Coin[] array, Coin element){
+        array = Arrays.copyOf(array, array.length + 1);
+        array[array.length-1] = element;
+        return array;
+    }
+    
+    //Check if rect is in range of another rect
+    public Boolean inRange(Rectangle rect1, Rectangle rect2, int distance){
+        double distanceFromRect = Math.sqrt(Math.pow(((rect1.x + rect1.width/2) - (rect2.x + rect2.width/2)), 2) + Math.pow(((rect1.y + rect1.height/2) - (rect2.y + rect2.height/2)), 2));
+        if(distanceFromRect < distance){
+            return true;
+        } else{
+            return false;
+        }
     }
 
     public void startGameThread(){
@@ -185,6 +203,19 @@ public class GamePanel extends JPanel implements Runnable{
                 }
             }
         }
+
+        //update coins
+        for(int i = 0; i < coins.length; i++){
+            //if coins isnt deleted
+            if(coins[i] != null){
+                //if coin should be destroyed, set it to null (destroy it)
+                if(coins[i].destroy){
+                    coins[i] = null;
+                } else{
+                    coins[i].update();
+                }
+            }
+        }
     }
 
     //draw function
@@ -219,6 +250,13 @@ public class GamePanel extends JPanel implements Runnable{
         for(int i = 0; i < enemies.length; i++){
             if(enemies[i] != null){
                 enemies[i].draw(g2);
+            }
+        }
+
+        //draw coins
+        for(int i = 0; i < coins.length; i++){
+            if(coins[i] != null){
+                coins[i].draw(g2);
             }
         }
 

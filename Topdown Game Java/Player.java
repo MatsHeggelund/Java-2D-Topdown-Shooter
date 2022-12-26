@@ -14,7 +14,7 @@ public class Player {
     Player(GamePanel gamePanel, int x, int y){
         this.game = gamePanel;
         this.speed = 6;
-        this.attackspeed = 15;
+        this.attackspeed = game.FPS / 4; //FPS / projectiles per second
         //Sprite flipping variables based on mouse position
         this.direction = 1;
         this.flipImage = 0;

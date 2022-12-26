@@ -43,7 +43,7 @@ public class Enemy {
 
     public void update(){
         //if enemy is in range of the player
-        if(this.inRange(game.player.rect, game.tileSize*7)){
+        if(game.inRange(this.rect, game.player.rect, game.tileSize*7)){
             //Change enemies facing direction based on position relative to player
             if(game.player.rect.x > this.rect.x){
                 this.direction = -1;
@@ -89,16 +89,6 @@ public class Enemy {
     //draw the enemy
     public void draw(Graphics2D g2){
         g2.drawImage(enemyImage, this.rect.x + this.flipImage*this.rect.width, this.rect.y, this.rect.width*this.direction, this.rect.height, null);
-    }
-
-    //Check if the enemy is within range of the player
-    public Boolean inRange(Rectangle rect, int distance){
-        double distanceFromRect = Math.sqrt(Math.pow((this.rect.x - rect.x), 2) + Math.pow((this.rect.y - rect.y), 2));
-        if(distanceFromRect < distance){
-            return true;
-        } else{
-            return false;
-        }
     }
     
     //get enemies sprite

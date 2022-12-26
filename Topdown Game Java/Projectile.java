@@ -5,6 +5,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.awt.Rectangle;
 import java.lang.Math;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Projectile {
     GamePanel game;
@@ -62,16 +63,19 @@ public class Projectile {
     }
 
     public void update(){
+        //if projectile has not hit anything yet
         if(this.speed > 0){
             this.angle = Math.atan2(this.dy, this.dx);
             this.rect.x += this.speed * Math.cos(this.angle);
             this.rect.y += this.speed * Math.sin(this.angle);
             this.projectileCollisionDetection();
         } else{
+            //if projectile has hit something, play sprite animation
             if(this.animationTick == 3){
                 if(this.animationIndex < 8){
                     this.projectileImage = this.projectileAnimation[this.animationIndex];
                 } else{
+                    //if hit animation is finished, destroy bullet
                     this.destroy = true;
                 }
                 this.animationTick = 0;
@@ -99,9 +103,20 @@ public class Projectile {
             if(game.enemies[i] != null){
                 if(this.rect.intersects(game.enemies[i].rect)){
                     this.speed = 0;
+                    //register enemy as hit. reduce hitpoints
                     game.enemies[i].health--;
                     game.enemies[i].hit = true;
+                    //If enemy dies, remove it
                     if(game.enemies[i].health <= 0){
+                        //drop coins on enemy position
+                        int numberOfCoinDrops = ThreadLocalRandom.current().nextInt(0, 3);
+                        for (int j = 0; j < numberOfCoinDrops; j++) {
+                            //Spread coin drop positions
+                            int randomPositionOffsetX = ThreadLocalRandom.current().nextInt(-25, 25);
+                            int randomPositionOffsetY = ThreadLocalRandom.current().nextInt(-25, 25);
+                            game.coins = game.AppendCoins(game.coins, new Coin(game, game.enemies[i].rect.x + j*randomPositionOffsetX, game.enemies[i].rect.y +  j*randomPositionOffsetY));
+                        }
+                        //remove enemy on kill
                         game.enemies[i].destroy = true;
                         game.numberOfEnemies--;
                     }
